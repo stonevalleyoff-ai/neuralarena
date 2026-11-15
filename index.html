@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neural Arena</title>
+<meta name="description" content="Dresse un cerveau de neurones, puis lâche-le dans l'arène : des duels d'automates au lance-traits.">
+<meta name="theme-color" content="#0f1318">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icones/icone.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Neural Arena">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="tete">
+  <a class="marque" href="#jouer" aria-label="Neural Arena, accueil">
+    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect x="7" y="5" width="18" height="22" rx="6" fill="#ff6b5e"/><rect x="9.5" y="10" width="13" height="7" rx="3.5" fill="#10151c"/><circle cx="19" cy="13.5" r="2.2" fill="#fff"/><path d="M16 5V1.5" stroke="#ff6b5e" stroke-width="2" stroke-linecap="round"/></svg>
+    <span>Neural<b>Arena</b></span>
+  </a>
+  <nav class="onglets" aria-label="Sections">
+    <a href="#jouer" data-onglet="jouer">Jouer</a>
+    <a href="#dresser" data-onglet="dresser">Dresser</a>
+    <a href="#cerveaux" data-onglet="cerveaux">Cerveaux</a>
+    <a href="#communaute" data-onglet="communaute">Communauté</a>
+  </nav>
+  <div class="outils">
+    <button type="button" id="b-installer" class="icone" title="Installer l'application" aria-label="Installer l'application" hidden>⤓</button>
+    <button type="button" id="b-son" class="icone" aria-pressed="true" title="Le son">♪</button>
+    <button type="button" id="b-compte" class="compte"><span class="pastille" id="pastille"></span><span id="nom-compte">Se connecter</span></button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ JOUER ============ -->
+  <section id="ecran-jouer" class="ecran" hidden>
+    <div class="titre"><h1>Le combat</h1><p>Deux à quatre automates, un lance-traits chacun. Trois touches et c'est fini. Les bords de l'arène rebouclent.</p></div>
+    <div class="grille-jouer">
+      <div class="bloc">
+        <h2>Les combattants</h2>
+        <div id="places" class="places"></div>
+      </div>
+      <div class="bloc">
+        <h2>L'arène</h2>
+        <div id="cartes" class="cartes" role="radiogroup" aria-label="L'arène"></div>
+        <h2>Les aléas</h2>
+        <div id="aleas" class="puces"></div>
+        <h2>Manches à gagner</h2>
+        <div id="manches" class="segments" role="radiogroup" aria-label="Manches à gagner"></div>
+      </div>
+    </div>
+    <div class="lancer"><button type="button" id="b-lancer" class="gros">Lancer le combat</button><p id="aide-lancer" class="doux"></p></div>
+  </section>
+
+  <!-- ============ DRESSER ============ -->
+  <section id="ecran-dresser" class="ecran" hidden>
+    <div class="titre"><h1>Le dressage</h1><p>Le dresseur essaie des variantes du cerveau, les fait toutes combattre, et garde ce qui marche. Tu regardes ton élève pendant ce temps.</p></div>
+    <div class="grille-dresser">
+      <div class="bloc reglages">
+        <label class="champ"><span>Le cerveau</span><select id="d-cerveau"></select></label>
+        <h2>L'accent</h2>
+        <div id="d-foyer" class="puces"></div>
+        <h2>L'adversaire</h2>
+        <div id="d-niveau" class="segments" role="radiogroup" aria-label="L'adversaire"></div>
+        <p id="d-adversaire" class="doux"></p>
+        <h2>Les partenaires</h2>
+        <div id="d-ligue" class="segments" role="radiogroup" aria-label="Les partenaires"></div>
+        <p id="d-partenaires" class="doux"></p>
+        <button type="button" id="b-dresser" class="gros">Dresser</button>
+        <p id="d-etat" class="doux" aria-live="polite"></p>
+      </div>
+      <div class="bloc scene">
+        <div class="cadre"><canvas id="c-dresser" aria-label="Le cerveau en combat d'essai"></canvas><div id="d-bandeau" class="bandeau"></div></div>
+        <div class="tuiles">
+          <div><b id="t-gen">0</b><span>génération</span></div>
+          <div><b id="t-elo">1000</b><span>classement</span></div>
+          <div><b id="t-niv">1</b><span>niveau affronté</span></div>
+          <div><b id="t-taux">–</b><span>manches gagnées</span></div>
+        </div>
+        <div class="deux">
+          <figure><figcaption>La progression <span class="legende"><i style="background:#ffb547"></i>classement <i style="background:#4fc3f7"></i>manches gagnées</span></figcaption><canvas id="c-courbe" width="560" height="190"></canvas></figure>
+          <figure><figcaption>Ce qu'il pense, en direct</figcaption><canvas id="c-reseau" width="560" height="190"></canvas></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CERVEAUX ============ -->
+  <section id="ecran-cerveaux" class="ecran" hidden>
+    <div class="titre"><h1>Tes cerveaux</h1><p>Chacun est un petit réseau de neurones. Il naît d'une couvée, grandit au dressage, et te suit avec ton compte.</p>
+      <div class="actions"><button type="button" id="b-couver" class="plein">+ Couver un cerveau</button><button type="button" id="b-importer">Importer un fichier</button><input type="file" id="f-importer" accept="application/json,.json" hidden></div>
+    </div>
+    <div id="liste-cerveaux" class="fiches"></div>
+  </section>
+
+  <!-- ============ COMMUNAUTÉ ============ -->
+  <section id="ecran-communaute" class="ecran" hidden>
+    <div class="titre"><h1>La communauté</h1><p>Les cerveaux que les joueurs ont publiés, les mieux classés d'abord. Affronte-les, ou adopte-en un pour le dresser à ta façon.</p>
+      <div class="actions"><button type="button" id="b-rafraichir">Actualiser</button></div>
+    </div>
+    <div id="classement" class="bloc tableau" aria-live="polite"></div>
+  </section>
+</main>
+
+<!-- ============ LE COMBAT, EN PLEIN ÉCRAN ============ -->
+<div id="combat" class="combat" hidden>
+  <div class="barre">
+    <div id="scores" class="scores"></div>
+    <div class="horloge"><span id="h-manche"></span><b id="h-temps">0:45</b></div>
+    <button type="button" id="b-pause" class="icone" title="Pause (Échap)">Ⅱ</button>
+  </div>
+  <p class="tourne">Tourne ton téléphone : l'arène sera plus grande.</p>
+  <div class="terrain"><canvas id="c-combat"></canvas>
+    <div id="annonce" class="annonce" hidden></div>
+    <div id="tactile" class="tactile" hidden>
+      <div class="manette" id="m-gauche"><i></i></div>
+      <div class="manette" id="m-droite"><i></i></div>
+      <button type="button" id="t-ruee">Ruée</button>
+    </div>
+  </div>
+  <p id="touches" class="touches">Q/D ou ←/→ courir · Z, ↑ ou Espace sauter (contre un mur aussi) · S descendre · Maj ruée · souris viser, clic tirer</p>
+  <div id="voile" class="voile" hidden>
+    <div class="carton">
+      <h2 id="v-titre">Pause</h2>
+      <div id="v-corps"></div>
+      <div class="actions" id="v-actions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LE COMPTE ============ -->
+<dialog id="d-compte" class="fenetre">
+  <form method="dialog"><button class="fermer" aria-label="Fermer">×</button></form>
+  <div id="compte-hors">
+    <h2>Ton compte</h2>
+    <p class="doux">Le compte StoneValley, le même que pour les autres jeux. Connecté, tes cerveaux sont gardés en ligne et te suivent d'un appareil à l'autre.</p>
+    <form id="f-connexion">
+      <label class="champ"><span>E-mail</span><input type="email" id="c-email" autocomplete="email" required></label>
+      <label class="champ"><span>Mot de passe</span><input type="password" id="c-mdp" autocomplete="current-password" required minlength="8"></label>
+      <button type="submit" class="gros">Se connecter</button>
+      <p id="c-avis" class="avis" aria-live="polite"></p>
+    </form>
+    <p class="doux">Pas encore de compte, ou mot de passe oublié ? <a id="l-portail" href="https://stonevalleyoff-ai.github.io/compte.html" target="_blank" rel="noopener">C'est sur le portail StoneValley.</a> Sans compte, on joue quand même : les cerveaux restent dans ce navigateur.</p>
+  </div>
+  <div id="compte-dans" hidden>
+    <h2 id="c-pseudo"></h2>
+    <p class="doux" id="c-adresse"></p>
+    <p id="c-synchro" class="avis" aria-live="polite"></p>
+    <div class="actions"><button type="button" id="b-synchro">Synchroniser maintenant</button><a class="bouton" href="https://stonevalleyoff-ai.github.io/compte.html" target="_blank" rel="noopener">Gérer mon compte</a><button type="button" id="b-sortir">Se déconnecter</button></div>
+  </div>
+</dialog>
+
+<!-- ============ UNE QUESTION (renommer, supprimer) ============ -->
+<dialog id="d-question" class="fenetre">
+  <form id="f-question">
+    <h2 id="q-titre"></h2>
+    <p id="q-texte" class="doux"></p>
+    <label class="champ" id="q-champ"><span>Le nom</span><input type="text" id="q-valeur" maxlength="24" autocomplete="off"></label>
+    <div class="actions"><button type="submit" id="q-oui" class="plein">D'accord</button><button type="button" id="q-non">Annuler</button></div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="sim.js"></script>
+<script src="rendu.js"></script>
+<script src="compte.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

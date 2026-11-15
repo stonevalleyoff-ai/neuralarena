@@ -1,0 +1,24 @@
+{
+  "name": "Neural Arena",
+  "short_name": "Neural Arena",
+  "description": "Dresse un cerveau de neurones, puis lâche-le dans l'arène : des duels d'automates au lance-traits.",
+  "lang": "fr",
+  "id": "./",
+  "start_url": "./?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f1318",
+  "theme_color": "#0f1318",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icones/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Dresser", "url": "./#dresser", "icons": [{ "src": "icones/icone-192.png", "sizes": "192x192" }] },
+    { "name": "Mes cerveaux", "url": "./#cerveaux", "icons": [{ "src": "icones/icone-192.png", "sizes": "192x192" }] }
+  ]
+}
