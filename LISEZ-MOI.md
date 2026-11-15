@@ -2,7 +2,7 @@
 
 Dresse un cerveau de neurones, puis lâche-le dans l'arène : des duels d'automates au lance-traits.
 
-Le jeu : https://stonevalleyoff-ai.github.io/neuralarena/ (une fois GitHub Pages activé sur ce dépôt).
+Le jeu : https://stonevalleyoff-ai.github.io/neuralarena/ (une fois GitHub Pages activé sur ce dépôt). Il est au catalogue du portail StoneValley.
 
 Des pages statiques, sans dépendance ni étape de construction : ce qui est dans le dépôt est ce qui est servi. Une reprise, à neuf, du jeu de `shinjiebi.github.io/neuralarena/` : l'idée est gardée (des duels en plateformes dans des arènes qui rebouclent, des cerveaux qu'on entraîne, un classement), tout le reste est refait.
 
@@ -34,7 +34,7 @@ Côté base, tout est dans `supabase.sql`, préfixé `na_` : une table fermée (
 
 À savoir :
 - le dressage se fait dans le navigateur, donc le classement est celui que le jeu déclare. Pour un prototype, c'est assez ; pour un vrai classement, il faudrait rejouer les manches côté serveur.
-- `sv_mes_donnees` (le téléchargement des données du compte, dans le `supabase.sql` du portail) ne connaît pas encore `na_cerveaux` : à y ajouter quand le jeu entrera au catalogue.
+- le portail rend les cerveaux dans le téléchargement des données du compte (par `na_mes_cerveaux`, et par `sv_mes_donnees` quand son `supabase.sql` sera passé).
 
 ### Travailler sur sa machine
 
@@ -61,4 +61,4 @@ Installée, elle s'ouvre en plein écran et se joue **sans réseau** : le combat
 
 ### Ce qui n'y est pas encore
 
-Pas de deuxième joueur humain sur le même écran, pas de manette, pas d'entrée au catalogue du portail.
+Pas de deuxième joueur humain sur le même écran, pas de manette.

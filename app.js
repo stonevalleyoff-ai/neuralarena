@@ -403,6 +403,7 @@
       b.sale = true; garder();
       if (r.generation % 8 === 0) D.ancien = b.poids;
       if (ecran === 'dresser' && E.dressage.cerveau === b.id) { peindreTuiles(b, D.lisse); courbe(b); $('d-etat').textContent = 'Dressage en cours…' + (r.tauxRivaux != null ? ' Contre les autres cerveaux, cette génération : ' + Math.round(r.tauxRivaux * 100) + ' %.' : '') + (r.monte ? ' Il passe au niveau ' + r.niveau + ' !' : ''); }
+      if (r.monte && ecran === 'dresser' && E.dressage.cerveau === b.id) $('d-adversaire').textContent = 'Il affronte ' + NA.NIVEAUX[r.niveau].nom + ', ' + NA.NIVEAUX[r.niveau].titre + ', et monte d\'un niveau dès qu\'il gagne sept manches sur dix.';
       if (r.monte) toast(b.nom + ' passe au niveau ' + r.niveau + ' : il affronte ' + NA.NIVEAUX[r.niveau].nom + '.');
       if (Date.now() - D.pousse > 60000) { D.pousse = Date.now(); pousser(b); }
     };
